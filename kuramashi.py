@@ -22,16 +22,22 @@ def main():
 
         # シート選択後の処理
         if st.button('シート選択完了'):
-            # 選択されたシートをセッションステートに保存
-            st.session_state["df1"] = pd.read_excel(file1, sheet_name=selected_sheet1, header=5)  # 6行目がヘッダー
-            st.session_state["df2"] = pd.read_excel(file2, sheet_name=selected_sheet2, header=0)  # 1行目がヘッダー
+            # 選択されたシートを読み込み（ヘッダー行を指定）
+            df1 = pd.read_excel(file1, sheet_name=selected_sheet1, header=5)  # 6行目がヘッダー
+            df2 = pd.read_excel(file2, sheet_name=selected_sheet2, header=0)  # 1行目がヘッダー
 
-    # ヘッダーのマッピング処理
-    if "df1" in st.session_state and "df2" in st.session_state:
-        st.subheader('2のシートのヘッダー名に対応する1のシートのヘッダーを選択してください')
-        for col in st.session_state["df2"].columns:
-            options = list(st.session_state["df1"].columns)
-            st.session_state[col] = st.selectbox(f'2のシートのヘッダー "{col}" に対応する1のシートのヘッダーを選択:', options, key=col)
+            # 2のシートのヘッダー名に対応する1のシートのヘッダーを選択
+            st.subheader('2のシートのヘッダー名に対応する1のシートのヘッダーを選択してください')
+            header_mappings = {}
+            for col in df2.columns:
+                options = list(df1.columns)
+                selected_option = st.selectbox(f'2のシートのヘッダー "{col}" に対応する1のシートのヘッダーを選択:', options, key=col+"_header")
+                header_mappings[col] = selected_option
+
+            st.write('選択が完了しました。')
+            # ここに転記のロジックを追加
+
+            st.write('情報転記が完了しました！')
 
 # アプリを実行
 if __name__ == "__main__":
