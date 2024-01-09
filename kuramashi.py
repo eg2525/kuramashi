@@ -39,9 +39,10 @@ def main():
             csv_data = StringIO()
             df2.to_csv(csv_data, index=False, encoding='cp932')
             csv_data.seek(0)
+            csv_string = csv_data.getvalue()
 
             st.download_button(label='完成したシートをダウンロード',
-                               data=csv_data,
+                               data=csv_string,
                                file_name='completed_sheet.csv',
                                mime='text/csv')
 
