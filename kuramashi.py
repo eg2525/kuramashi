@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from io import StringIO
+from io import BytesIO
 
 def main():
     st.title('Excel情報転記アプリ')
@@ -36,13 +36,12 @@ def main():
                     df2[col2] = df1[col1]
 
             # CSVとしてデータをエンコード
-            csv_data = StringIO()
-            df2.to_csv(csv_data, index=False, encoding='cp932')
-            csv_data.seek(0)
-            csv_string = csv_data.getvalue()
+            csv_bytes = BytesIO()
+            df2.to_csv(csv_bytes, index=False, encoding='cp932')
+            csv_bytes.seek(0)
 
             st.download_button(label='完成したシートをダウンロード',
-                               data=csv_string,
+                               data=csv_bytes,
                                file_name='completed_sheet.csv',
                                mime='text/csv')
 
