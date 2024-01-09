@@ -1,8 +1,8 @@
-import streamlit as st  # Streamlitをインポート
-import pandas as pd  # pandasをインポート
+import streamlit as st
+import pandas as pd
 
 def main():
-    st.title('倉増アプリ')  # アプリのタイトル
+    st.title('Excel情報転記アプリ')
 
     # Excelファイルのアップロード部分
     st.subheader('二つのExcelファイルをアップロードしてください')
@@ -24,14 +24,20 @@ def main():
         if st.button('情報転記を実行'):
             st.write('情報転記を開始します...')
 
-            # 選択されたシートを読み込み
-            df1 = pd.read_excel(file1, sheet_name=selected_sheet1)
-            df2 = pd.read_excel(file2, sheet_name=selected_sheet2)
+            # 選択されたシートを読み込み（ヘッダー行を指定）
+            df1 = pd.read_excel(file1, sheet_name=selected_sheet1, header=5)  # 6行目がヘッダー
+            df2 = pd.read_excel(file2, sheet_name=selected_sheet2, header=0)  # 1行目がヘッダー
 
-            # ここで、シート間の情報転記のロジックを追加
-            # 例: df1とdf2のデータを比較、結合、またはコピー
-            #     必要なデータ処理を行い
-            #     結果を画面に表示または新しいExcelファイルとして保存
+            # 2のシートのヘッダー名を表示し、1のシートのヘッダーから選択できるようにする
+            st.subheader('2のシートのヘッダー名に対応する1のシートのヘッダーを選択してください')
+            header_mappings = {}
+            for col in df2.columns:
+                options = list(df1.columns)
+                selected_option = st.selectbox(f'2のシートのヘッダー "{col}" に対応する1のシートのヘッダーを選択:', options, key=col)
+                header_mappings[col] = selected_option
+
+            st.write('選択が完了しました。')
+            # ここに転記のロジックを追加
 
             st.write('情報転記が完了しました！')
 
