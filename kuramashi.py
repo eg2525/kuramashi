@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from io import StringIO
 
 def main():
     st.title('Excel情報転記アプリ')
@@ -30,15 +31,17 @@ def main():
         if st.button('転記実行'):
             st.write('情報転記を実行中...')
 
-            # 転記処理
             for col2, col1 in header_mappings.items():
                 if col1 != '転記しない':
                     df2[col2] = df1[col1]
 
-            # 転記が完了したシートをCSVとして保存
-            output_csv = df2.to_csv(index=False)
+            # CSVとしてデータをエンコード
+            csv_data = StringIO()
+            df2.to_csv(csv_data, index=False, encoding='cp932')
+            csv_data.seek(0)
+
             st.download_button(label='完成したシートをダウンロード',
-                               data=output_csv,
+                               data=csv_data,
                                file_name='completed_sheet.csv',
                                mime='text/csv')
 
